@@ -1,0 +1,71 @@
+<!-- Ecuaciones que flotan por el fondo de la página.
+     Para quitarlas: borra la línea "include-after-body: equations.html" de _quarto.yml.
+     Para añadir o cambiar ecuaciones: edita la lista EQS de abajo (se admite <sub> y <sup>). -->
+<div class="eq-float" aria-hidden="true"></div>
+<script>
+(function () {
+  var EQS = [
+    "b = (X′X)<sup>−1</sup>X′y",
+    "τ<sub>ATT</sub> = E[Y(1) − Y(0) | D = 1]",
+    "E[ε | X] = 0",
+    "LATE = Cov(Y,Z) / Cov(D,Z)",
+    "y<sub>t</sub> = φ y<sub>t−1</sub> + ε<sub>t</sub>",
+    "Pr(Y = 1 | x) = Φ(x′β)",
+    "Y<sub>i</sub> = D<sub>i</sub>Y<sub>i</sub>(1) + (1 − D<sub>i</sub>)Y<sub>i</sub>(0)",
+    "y<sub>it</sub> = α<sub>i</sub> + λ<sub>t</sub> + δD<sub>it</sub> + ε<sub>it</sub>",
+    "√n (b − β) → N(0, V)",
+    "Var(X) = E[X²] − (E[X])²",
+    "Cov(X,Y) = E[XY] − E[X]E[Y]",
+    "P(A | B) = P(B | A) P(A) / P(B)",
+    "f(x) = e<sup>−(x−μ)²/2σ²</sup> / √(2πσ²)",
+    "ℓ(θ) = Σ<sub>i</sub> log f(y<sub>i</sub> ; θ)",
+    "R² = 1 − SSR / SST",
+    "t = (b − β<sub>0</sub>) / se(b)",
+    "min<sub>β</sub> Σ<sub>i</sub> (y<sub>i</sub> − x<sub>i</sub>′β)²",
+    "ρ = σ<sub>xy</sub> / σ<sub>x</sub>σ<sub>y</sub>",
+    "Δy<sub>t</sub> = μ + γ Δy<sub>t−1</sub> + u<sub>t</sub>",
+    "E[Y | X = x] = x′β",
+    "plim (1/n) Σ x<sub>i</sub> = μ",
+    "θ<sub>PV</sub> = (1/M) Σ<sub>m</sub> θ<sub>m</sub>"
+  ];
+
+  var box = document.querySelector(".eq-float");
+  if (!box) return;
+  document.body.prepend(box);   // directamente en <body>, por detrás de todo el contenido
+  var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var n = window.innerWidth < 768 ? 10 : EQS.length;
+  var W, H, items = [];
+
+  function size() { W = window.innerWidth; H = window.innerHeight; }
+  size();
+  window.addEventListener("resize", size);
+
+  for (var i = 0; i < n; i++) {
+    var el = document.createElement("span");
+    el.innerHTML = EQS[i];
+    box.appendChild(el);
+    var ang = Math.random() * 2 * Math.PI, speed = 6 + Math.random() * 10; // píxeles por segundo
+    items.push({ el: el, x: Math.random() * W, y: Math.random() * H,
+                 vx: Math.cos(ang) * speed, vy: Math.sin(ang) * speed, w: 0, h: 0 });
+  }
+  items.forEach(function (it) { it.w = it.el.offsetWidth; it.h = it.el.offsetHeight; });
+
+  function place(it) { it.el.style.transform = "translate(" + it.x + "px," + it.y + "px)"; }
+  items.forEach(place);
+  if (still) return;
+
+  var last = performance.now();
+  function tick(now) {
+    var dt = Math.min((now - last) / 1000, 0.1); last = now;
+    items.forEach(function (it) {
+      it.x += it.vx * dt; it.y += it.vy * dt;
+      // al salir por un borde, reaparece por el contrario
+      if (it.x > W) it.x = -it.w; else if (it.x < -it.w) it.x = W;
+      if (it.y > H) it.y = -it.h; else if (it.y < -it.h) it.y = H;
+      place(it);
+    });
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+</script>

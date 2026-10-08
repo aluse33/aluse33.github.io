@@ -1,0 +1,144 @@
+%-----------------------------------------------------------------------------------------------------------------------------------------------%
+%	The MIT License (MIT)
+%
+%	Copyright (c) 2021 Jitin Nair
+%
+%	Permission is hereby granted, free of charge, to any person obtaining a copy
+%	of this software and associated documentation files (the "Software"), to deal
+%	in the Software without restriction, including without limitation the rights
+%	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+%	copies of the Software, and to permit persons to whom the Software is
+%	furnished to do so, subject to the following conditions:
+%
+%	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+%	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+%	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+%	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+%	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+%	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+%	THE SOFTWARE.
+%
+%-----------------------------------------------------------------------------------------------------------------------------------------------%
+
+\documentclass[a4paper,11pt]{article}
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES
+%----------------------------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+\IfFileExists{lmodern.sty}{\usepackage[T1]{fontenc}\usepackage{lmodern}}{}
+\usepackage{url}
+\usepackage{parskip}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[top=1.3cm,bottom=1.2cm,left=2cm,right=2cm]{geometry}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+
+% Section style
+\titleformat{\section}{\Large\scshape\raggedright}{}{0em}{}[\titlerule]
+\titlespacing{\section}{0pt}{9pt}{5pt}
+
+% Links (same green as the website)
+\usepackage[unicode, draft=false]{hyperref}
+\definecolor{linkcolour}{HTML}{0E7C74}
+\hypersetup{colorlinks,breaklinks,urlcolor=linkcolour,linkcolor=linkcolour}
+
+% Icons: uses fontawesome5 if installed (e.g. Overleaf); otherwise compiles without icons
+\IfFileExists{fontawesome5.sty}{\usepackage{fontawesome5}}{%
+  \newcommand{\faEnvelope}{}\newcommand{\faGlobe}{}%
+  \newcommand{\faGithub}{}\newcommand{\faLinkedin}{}}
+
+% Two-column entry: date on the left, content on the right
+\newcommand{\entry}[2]{%
+  \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{2.9cm} X@{}}
+    \textbf{#1} & #2
+  \end{tabularx}\par}
+
+\setlist[itemize]{leftmargin=3.4cm, topsep=-2pt, itemsep=0pt, parsep=0pt}
+
+%----------------------------------------------------------------------------------------
+\begin{document}
+\pagestyle{empty}
+
+%----------------------------------------------------------------------------------------
+%	TITLE
+%----------------------------------------------------------------------------------------
+\begin{tabularx}{\linewidth}{@{} C @{}}
+\Huge{Alejandro Lucas Serrano} \\[7pt]
+\href{mailto:alejandro.lucas@uv.es}{\raisebox{-0.05\height}\faEnvelope\ alejandro.lucas@uv.es} \ $|$ \
+\href{https://github.com/aluse33}{\raisebox{-0.05\height}\faGithub\ GitHub} \ $|$ \
+\href{https://www.linkedin.com/in/alejandro-lucas-797530392/}{\raisebox{-0.05\height}\faLinkedin\ LinkedIn}
+\end{tabularx}
+
+%----------------------------------------------------------------------------------------
+\section{Profile}
+
+I am a first-year PhD student in Industrial Economics at the University of Valencia, with a strong academic background and a keen interest in econometrics and quantitative methods.
+My research focuses on the economics of skill mismatch, exploring its implications for labor market performance and workers' well-being.
+During my academic career, I have gained valuable experience as a Research Assistant in the Department of Economic Structure through a collaboration grant, and later as a Senior Research Technician in the Department of Economic Analysis, both at the University of Valencia.
+
+%----------------------------------------------------------------------------------------
+\section{Education}
+
+\entry{Since 2025}{\textbf{PhD Candidate in Industrial Economics}, University of Valencia.}
+
+\entry{2025}{\textbf{MSc in Economics}, University of Valencia. GPA: \textbf{8.35}/10.}
+\begin{itemize}
+  \item Master's thesis: ``Skill Mismatch Effects on OECD Workers' Job Satisfaction:
+        Evidence from PIAAC Survey''. Grade: \textbf{10}/10.
+\end{itemize}
+
+\entry{2024}{\textbf{BSc in Economics}, University of Valencia. GPA: \textbf{8.00}/10.}
+\begin{itemize}
+  \item Final degree project: ``Testing the Real Business Cycle model: Does it explain the
+        short-run fluctuations in the Spanish economy?''. Grade: \textbf{9.5}/10.
+\end{itemize}
+
+%----------------------------------------------------------------------------------------
+\section{Research}
+
+\entry{2026}{\textbf{Skill mismatch and job satisfaction: evidence from OECD
+countries} (with Pilar Beneito). First chapter of my PhD thesis, work in progress.}
+
+%----------------------------------------------------------------------------------------
+\section{Research experience}
+
+\entry{Feb 2025 -- Aug 2025}{\textbf{Senior Research Technician}, Department of Economic Analysis,
+University of Valencia.}
+
+\entry{Nov 2024 -- May 2025}{\textbf{Research Assistant} (collaboration grant), Department of Economic
+Structure, University of Valencia.}
+
+%----------------------------------------------------------------------------------------
+\section{Presentations}
+
+\entry{Jan 2026}{VI Young Researchers Workshop of the Department of Economic Analysis
+(WS-JIDAE), University of Valencia.}
+
+%----------------------------------------------------------------------------------------
+\section{Teaching}
+
+\entry{Spring 2026}{\textbf{Econometrics II} (practical sessions, taught in R).
+Bachelor's Degree in Economics, University of Valencia.}
+
+%----------------------------------------------------------------------------------------
+\section{Organising committees}
+
+\entry{Aug 2025}{52nd Annual Conference of the European Association for Research in
+Industrial Economics (EARIE).}
+
+\entry{Sep 2023}{25th INFER Annual Conference / XX INTECO Workshop on Economic
+Integration.}
+
+%----------------------------------------------------------------------------------------
+\section{Skills and languages}
+
+\entry{Software}{\textbf{Stata} and \textbf{R} (advanced), \textbf{Python} (intermediate), MATLAB, \LaTeX\ (articles,
+thesis and Beamer slides), Git, Quarto.}
+\entry{Languages}{Spanish (native), English (full professional proficiency), French (elementary).}
+
+
+\end{document}

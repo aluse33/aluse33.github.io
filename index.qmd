@@ -1,0 +1,59 @@
+---
+title: "Alejandro Lucas"
+subtitle: "PhD Candidate in Industrial Economics"
+image: files/profile.jpg
+about:
+  template: trestles      # alternativas: jolla, solana, marquee, broadside
+  image-shape: round
+  image-width: 14em
+  links:
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/alejandro-lucas-797530392/
+    - icon: github
+      text: GitHub
+      href: https://github.com/aluse33
+    - icon: bank
+      text: UV profile
+      href: "https://www.uv.es/uvweb/universidad/es/ficha-persona-1285950309813.html?p2=lusea@uv.es&idA="
+    - icon: envelope
+      text: Email
+      href: mailto:alejandro.lucas@uv.es
+---
+
+I am a **first-year PhD candidate** in Industrial Economics at the **University of Valencia**.
+My research lies at the intersection of **labour economics** and the **economics of
+education**, with a particular focus on **skill mismatch**, using **OECD data**.
+Methodologically, I am interested in **applied microeconometrics** and **causal
+inference**, as well as in how **machine learning** tools can support empirical work
+in economics.
+
+## Research interests
+
+- Causal inference
+- Applied microeconometrics
+- Labour economics
+- Economics of education
+- Skill mismatch
+- Machine learning
+
+## Education
+
+**PhD in Industrial Economics**, University of Valencia · *in progress*\
+Supervisors: Pilar Beneito & Óscar Vicente-Chirivella
+
+**MSc in Economics**, University of Valencia · 2025
+
+**BSc in Economics**, University of Valencia · 2024
+
+## Work in progress
+
+**Skill mismatch and job satisfaction: evidence from OECD countries** (with P. Beneito)\
+*First chapter of my PhD thesis · early stage*\
+How does skill mismatch affect workers' job satisfaction, and what does it mean
+for their well-being?\
+[Read the abstract](research.qmd){.btn .btn-outline-dark .btn-sm}
+
+## Software
+
+Stata · R · Python · MATLAB · [L<span class="latex-a">a</span>T<span class="latex-e">e</span>X]{.latex} · Git

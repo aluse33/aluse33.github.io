@@ -1,0 +1,46 @@
+project:
+  type: website
+  output-dir: docs          # GitHub Pages puede servir directamente esta carpeta
+  resources:
+    - files/
+
+website:
+  title: "Alejandro Lucas"
+  site-url: "https://aluse33.github.io"
+  description: "PhD candidate in Economics · Microeconometrics · Causal inference"
+  favicon: files/favicon.svg
+  search: true
+  page-navigation: true
+  navbar:
+    background: light
+    right:
+      - href: research.qmd
+        text: Research
+      - href: projects.qmd
+        text: Projects
+      - href: teaching.qmd
+        text: Teaching
+      - href: media.qmd
+        text: Talks
+      - href: files/CV.pdf
+        text: CV
+  page-footer:
+    left: "© 2026 Alejandro Lucas"
+    right:
+      - text: '<i class="bi bi-bank"></i>&nbsp; University of Valencia' 
+        href: https://www.uv.es
+
+format:
+  html:
+    theme:
+      light: [cosmo, styles.scss]
+    toc: false
+    smooth-scroll: true
+    code-copy: true
+    code-tools: false
+    include-after-body: equations.html
+
+# Los proyectos con código se ejecutan una vez y se "congelan":
+# así no hace falta tener R/Python/Stata instalados para reconstruir la web.
+execute:
+  freeze: auto

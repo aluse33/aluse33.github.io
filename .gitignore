@@ -1,0 +1,11 @@
+/.quarto/
+*_files/
+*.Rproj.user
+.DS_Store
+# Los datos de PIAAC no se suben al repositorio
+data/
+*.dta
+*.sav
+
+# Archivos privados (slides, borradores): no se suben a GitHub
+_private/

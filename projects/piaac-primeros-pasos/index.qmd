@@ -1,0 +1,128 @@
+---
+title: "PIAAC: getting started with plausible values"
+description: "How to compute means and regressions with plausible values and replicate weights in the OECD Survey of Adult Skills, in Stata, R and Python."
+date: 2026-09-08
+categories: [PIAAC, Stata, R, Python]
+---
+
+The OECD Survey of Adult Skills (PIAAC) is one of the richest sources of data on
+adults' literacy, numeracy and problem-solving skills. Its design, however, has two
+features that make it different from a standard household survey, and both matter
+for getting estimates and standard errors right.
+
+## Two things to keep in mind
+
+**1. There is no single test score.** Each respondent only answers part of the
+assessment, so PIAAC does not report one score per person. Instead, it provides
+**10 plausible values** for each domain (`PVLIT1–PVLIT10`, `PVNUM1–PVNUM10`, …):
+random draws from the distribution of that person's likely proficiency. Any
+statistic must be computed once with each plausible value and then combined using
+**Rubin's rules**:
+
+$$
+\hat\theta = \frac{1}{M}\sum_{m=1}^{M}\hat\theta_m, \qquad
+V = \bar U + \left(1 + \frac{1}{M}\right) B,
+$$
+
+where $\bar U$ is the average sampling variance across plausible values and $B$ is
+the variance of the $M = 10$ estimates between them. Averaging the plausible values
+into a single score and running one regression gives the wrong standard errors.
+
+**2. Standard errors come from replicate weights.** Besides the final weight
+`SPFWT0`, every file includes **80 replicate weights** (`SPFWT1–SPFWT80`). The
+sampling variance is obtained by re-estimating with each replicate weight. The
+variance formula depends on the country's jackknife method, stored in `VEMETHODN`:
+for **JK2** the squared deviations are simply summed, while for **JK1** they are
+multiplied by $(R-1)/R$, with $R = 80$.
+
+## Stata
+
+The `repest` command (Avvisati and Keslair, 2014) handles both features
+automatically: the `@` symbol tells it where the plausible-value number goes.
+
+```stata
+* ssc install repest
+use "prgespp1.dta", clear
+rename *, lower
+
+* Mean numeracy score
+repest PIAAC, estimate(means pvnum@)
+
+* Regression of numeracy on gender and age
+repest PIAAC, estimate(stata: reg pvnum@ i.gender_r age_r)
+```
+
+## R
+
+The `intsvy` package (Caro and Biecek, 2017) offers equivalent functions for PIAAC.
+
+```r
+library(haven)
+library(intsvy)
+
+piaac <- read_dta("prgespp1.dta")
+names(piaac) <- toupper(names(piaac))   # intsvy expects upper-case names
+
+# Mean numeracy score
+piaac.mean.pv(pvlabel = "NUM", data = piaac)
+
+# Regression of numeracy on gender and age
+piaac.reg.pv(x = c("GENDER_R", "AGE_R"), pvlabel = "NUM", data = piaac)
+```
+
+## Python
+
+There is no standard package for this in Python, but the procedure is short enough
+to write by hand. The function below estimates a weighted regression for each
+plausible value and each replicate weight, and combines the results with Rubin's
+rules.
+
+```python
+import numpy as np
+import pandas as pd
+import statsmodels.formula.api as smf
+
+def piaac_reg(df, rhs, domain="NUM", n_pv=10, n_rep=80):
+    """Weighted OLS with plausible values and replicate weights."""
+    jk1 = str(df["VEMETHODN"].iloc[0]).upper() in ("1", "JK1")
+    factor = (n_rep - 1) / n_rep if jk1 else 1.0
+
+    coefs, samp_vars = [], []
+    for m in range(1, n_pv + 1):
+        formula = f"PV{domain}{m} ~ {rhs}"
+        b0 = smf.wls(formula, data=df, weights=df["SPFWT0"]).fit().params
+        reps = pd.concat(
+            [smf.wls(formula, data=df, weights=df[f"SPFWT{r}"]).fit().params
+             for r in range(1, n_rep + 1)], axis=1)
+        coefs.append(b0)
+        samp_vars.append(factor * ((reps.sub(b0, axis=0)) ** 2).sum(axis=1))
+
+    coefs = pd.concat(coefs, axis=1)
+    est = coefs.mean(axis=1)                          # Rubin: point estimate
+    U = pd.concat(samp_vars, axis=1).mean(axis=1)     # within variance
+    B = coefs.var(axis=1, ddof=1)                     # between variance
+    se = np.sqrt(U + (1 + 1 / n_pv) * B)
+    return pd.DataFrame({"coef": est, "se": se})
+
+df = pd.read_stata("prgespp1.dta", convert_categoricals=False)
+df.columns = df.columns.str.upper()
+df = df.dropna(subset=["GENDER_R", "AGE_R"])
+piaac_reg(df, "C(GENDER_R) + AGE_R", domain="NUM")
+```
+
+::: {.callout-tip}
+## Before you start
+Country files can be downloaded from the [OECD PIAAC data page](https://www.oecd.org/en/about/programmes/piaac/piaac-data.html).
+File and variable names may differ slightly between countries and survey cycles,
+so check the codebook for the file you are using.
+:::
+
+## References
+
+- Avvisati, F. and Keslair, F. (2014). REPEST: Stata module to run estimations with
+  weighted replicate samples and plausible values. *Statistical Software Components*,
+  Boston College.
+- Caro, D. H. and Biecek, P. (2017). intsvy: An R package for analyzing international
+  large-scale assessment data. *Journal of Statistical Software*, 81(7), 1–44.
+- OECD (2019). *Technical Report of the Survey of Adult Skills (PIAAC)*, 3rd edition.
+  OECD Publishing, Paris.

@@ -1,0 +1,11 @@
+---
+title: "Teaching"
+---
+
+## University of Valencia
+
+### Econometrics II
+
+*Instructor, practical sessions* · Spring 2026\
+Bachelor's Degree in Economics. Compulsory course, taught in **R**.\
+[Syllabus](https://www.uv.es/recursos/fatwirepub/guias/36112-ANG-2025-26.pdf){.btn .btn-outline-dark .btn-sm}

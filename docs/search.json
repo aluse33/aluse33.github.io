@@ -1,0 +1,128 @@
+[
+  {
+    "objectID": "media.html",
+    "href": "media.html",
+    "title": "Talks",
+    "section": "",
+    "text": "Skill mismatch effects on OECD workers’ job satisfaction: evidence from the PIAAC Survey\nVI Young Researchers Workshop of the Department of Economic Analysis (WS-JIDAE)\nUniversity of Valencia · 8 January 2026"
+  },
+  {
+    "objectID": "media.html#section",
+    "href": "media.html#section",
+    "title": "Talks",
+    "section": "",
+    "text": "Skill mismatch effects on OECD workers’ job satisfaction: evidence from the PIAAC Survey\nVI Young Researchers Workshop of the Department of Economic Analysis (WS-JIDAE)\nUniversity of Valencia · 8 January 2026"
+  },
+  {
+    "objectID": "projects.html",
+    "href": "projects.html",
+    "title": "Projects",
+    "section": "",
+    "text": "PIAAC: getting started with plausible values\n\n\n\nPIAAC\n\n\nStata\n\n\nR\n\n\nPython\n\n\n\nHow to compute means and regressions with plausible values and replicate weights in the OECD Survey of Adult Skills, in Stata, R and Python.\n\n\n\nSep 8, 2026\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "research.html",
+    "href": "research.html",
+    "title": "Research",
+    "section": "",
+    "text": "with Pilar Beneito\nFirst chapter of my PhD thesis · work in progress\n\nAbstract. We investigate the causal effects of skill mismatch on job satisfaction across OECD countries, using a control function approach to address the endogeneity of mismatch. We find a marked asymmetry: underskilling tends to increase satisfaction, while overskilling consistently reduces it. These effects are robust to controlling for wages, suggesting that the mismatch–satisfaction channel operates independently of pay. The dissatisfaction penalty from overskilling appears to be larger among low-educated workers. Overall, skill mismatch has meaningful consequences for worker well-being, with implications for education, training and labour market policy."
+  },
+  {
+    "objectID": "research.html#working-papers",
+    "href": "research.html#working-papers",
+    "title": "Research",
+    "section": "",
+    "text": "with Pilar Beneito\nFirst chapter of my PhD thesis · work in progress\n\nAbstract. We investigate the causal effects of skill mismatch on job satisfaction across OECD countries, using a control function approach to address the endogeneity of mismatch. We find a marked asymmetry: underskilling tends to increase satisfaction, while overskilling consistently reduces it. These effects are robust to controlling for wages, suggesting that the mismatch–satisfaction channel operates independently of pay. The dissatisfaction penalty from overskilling appears to be larger among low-educated workers. Overall, skill mismatch has meaningful consequences for worker well-being, with implications for education, training and labour market policy."
+  },
+  {
+    "objectID": "teaching.html",
+    "href": "teaching.html",
+    "title": "Teaching",
+    "section": "",
+    "text": "Instructor, practical sessions · Spring 2026\nBachelor’s Degree in Economics. Compulsory course, taught in R.\nSyllabus"
+  },
+  {
+    "objectID": "teaching.html#university-of-valencia",
+    "href": "teaching.html#university-of-valencia",
+    "title": "Teaching",
+    "section": "",
+    "text": "Instructor, practical sessions · Spring 2026\nBachelor’s Degree in Economics. Compulsory course, taught in R.\nSyllabus"
+  },
+  {
+    "objectID": "projects/piaac-primeros-pasos/index.html",
+    "href": "projects/piaac-primeros-pasos/index.html",
+    "title": "PIAAC: getting started with plausible values",
+    "section": "",
+    "text": "The OECD Survey of Adult Skills (PIAAC) is one of the richest sources of data on adults’ literacy, numeracy and problem-solving skills. Its design, however, has two features that make it different from a standard household survey, and both matter for getting estimates and standard errors right."
+  },
+  {
+    "objectID": "projects/piaac-primeros-pasos/index.html#two-things-to-keep-in-mind",
+    "href": "projects/piaac-primeros-pasos/index.html#two-things-to-keep-in-mind",
+    "title": "PIAAC: getting started with plausible values",
+    "section": "Two things to keep in mind",
+    "text": "Two things to keep in mind\n1. There is no single test score. Each respondent only answers part of the assessment, so PIAAC does not report one score per person. Instead, it provides 10 plausible values for each domain (PVLIT1–PVLIT10, PVNUM1–PVNUM10, …): random draws from the distribution of that person’s likely proficiency. Any statistic must be computed once with each plausible value and then combined using Rubin’s rules:\n\\[\n\\hat\\theta = \\frac{1}{M}\\sum_{m=1}^{M}\\hat\\theta_m, \\qquad\nV = \\bar U + \\left(1 + \\frac{1}{M}\\right) B,\n\\]\nwhere \\(\\bar U\\) is the average sampling variance across plausible values and \\(B\\) is the variance of the \\(M = 10\\) estimates between them. Averaging the plausible values into a single score and running one regression gives the wrong standard errors.\n2. Standard errors come from replicate weights. Besides the final weight SPFWT0, every file includes 80 replicate weights (SPFWT1–SPFWT80). The sampling variance is obtained by re-estimating with each replicate weight. The variance formula depends on the country’s jackknife method, stored in VEMETHODN: for JK2 the squared deviations are simply summed, while for JK1 they are multiplied by \\((R-1)/R\\), with \\(R = 80\\)."
+  },
+  {
+    "objectID": "projects/piaac-primeros-pasos/index.html#stata",
+    "href": "projects/piaac-primeros-pasos/index.html#stata",
+    "title": "PIAAC: getting started with plausible values",
+    "section": "Stata",
+    "text": "Stata\nThe repest command (Avvisati and Keslair, 2014) handles both features automatically: the @ symbol tells it where the plausible-value number goes.\n* ssc install repest\nuse \"prgespp1.dta\", clear\nrename *, lower\n\n* Mean numeracy score\nrepest PIAAC, estimate(means pvnum@)\n\n* Regression of numeracy on gender and age\nrepest PIAAC, estimate(stata: reg pvnum@ i.gender_r age_r)"
+  },
+  {
+    "objectID": "projects/piaac-primeros-pasos/index.html#r",
+    "href": "projects/piaac-primeros-pasos/index.html#r",
+    "title": "PIAAC: getting started with plausible values",
+    "section": "R",
+    "text": "R\nThe intsvy package (Caro and Biecek, 2017) offers equivalent functions for PIAAC.\nlibrary(haven)\nlibrary(intsvy)\n\npiaac &lt;- read_dta(\"prgespp1.dta\")\nnames(piaac) &lt;- toupper(names(piaac))   # intsvy expects upper-case names\n\n# Mean numeracy score\npiaac.mean.pv(pvlabel = \"NUM\", data = piaac)\n\n# Regression of numeracy on gender and age\npiaac.reg.pv(x = c(\"GENDER_R\", \"AGE_R\"), pvlabel = \"NUM\", data = piaac)"
+  },
+  {
+    "objectID": "projects/piaac-primeros-pasos/index.html#python",
+    "href": "projects/piaac-primeros-pasos/index.html#python",
+    "title": "PIAAC: getting started with plausible values",
+    "section": "Python",
+    "text": "Python\nThere is no standard package for this in Python, but the procedure is short enough to write by hand. The function below estimates a weighted regression for each plausible value and each replicate weight, and combines the results with Rubin’s rules.\nimport numpy as np\nimport pandas as pd\nimport statsmodels.formula.api as smf\n\ndef piaac_reg(df, rhs, domain=\"NUM\", n_pv=10, n_rep=80):\n    \"\"\"Weighted OLS with plausible values and replicate weights.\"\"\"\n    jk1 = str(df[\"VEMETHODN\"].iloc[0]).upper() in (\"1\", \"JK1\")\n    factor = (n_rep - 1) / n_rep if jk1 else 1.0\n\n    coefs, samp_vars = [], []\n    for m in range(1, n_pv + 1):\n        formula = f\"PV{domain}{m} ~ {rhs}\"\n        b0 = smf.wls(formula, data=df, weights=df[\"SPFWT0\"]).fit().params\n        reps = pd.concat(\n            [smf.wls(formula, data=df, weights=df[f\"SPFWT{r}\"]).fit().params\n             for r in range(1, n_rep + 1)], axis=1)\n        coefs.append(b0)\n        samp_vars.append(factor * ((reps.sub(b0, axis=0)) ** 2).sum(axis=1))\n\n    coefs = pd.concat(coefs, axis=1)\n    est = coefs.mean(axis=1)                          # Rubin: point estimate\n    U = pd.concat(samp_vars, axis=1).mean(axis=1)     # within variance\n    B = coefs.var(axis=1, ddof=1)                     # between variance\n    se = np.sqrt(U + (1 + 1 / n_pv) * B)\n    return pd.DataFrame({\"coef\": est, \"se\": se})\n\ndf = pd.read_stata(\"prgespp1.dta\", convert_categoricals=False)\ndf.columns = df.columns.str.upper()\ndf = df.dropna(subset=[\"GENDER_R\", \"AGE_R\"])\npiaac_reg(df, \"C(GENDER_R) + AGE_R\", domain=\"NUM\")\n\n\n\n\n\n\nBefore you start\n\n\n\nCountry files can be downloaded from the OECD PIAAC data page. File and variable names may differ slightly between countries and survey cycles, so check the codebook for the file you are using."
+  },
+  {
+    "objectID": "projects/piaac-primeros-pasos/index.html#references",
+    "href": "projects/piaac-primeros-pasos/index.html#references",
+    "title": "PIAAC: getting started with plausible values",
+    "section": "References",
+    "text": "References\n\nAvvisati, F. and Keslair, F. (2014). REPEST: Stata module to run estimations with weighted replicate samples and plausible values. Statistical Software Components, Boston College.\nCaro, D. H. and Biecek, P. (2017). intsvy: An R package for analyzing international large-scale assessment data. Journal of Statistical Software, 81(7), 1–44.\nOECD (2019). Technical Report of the Survey of Adult Skills (PIAAC), 3rd edition. OECD Publishing, Paris."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Alejandro Lucas",
+    "section": "",
+    "text": "I am a first-year PhD candidate in Industrial Economics at the University of Valencia. My research lies at the intersection of labour economics and the economics of education, with a particular focus on skill mismatch, using OECD data. Methodologically, I am interested in applied microeconometrics and causal inference, as well as in how machine learning tools can support empirical work in economics."
+  },
+  {
+    "objectID": "index.html#research-interests",
+    "href": "index.html#research-interests",
+    "title": "Alejandro Lucas",
+    "section": "Research interests",
+    "text": "Research interests\n\nCausal inference\nApplied microeconometrics\nLabour economics\nEconomics of education\nSkill mismatch\nMachine learning"
+  },
+  {
+    "objectID": "index.html#education",
+    "href": "index.html#education",
+    "title": "Alejandro Lucas",
+    "section": "Education",
+    "text": "Education\nPhD in Industrial Economics, University of Valencia · in progress\nSupervisors: Pilar Beneito & Óscar Vicente-Chirivella\nMSc in Economics, University of Valencia · 2025\nBSc in Economics, University of Valencia · 2024"
+  },
+  {
+    "objectID": "index.html#work-in-progress",
+    "href": "index.html#work-in-progress",
+    "title": "Alejandro Lucas",
+    "section": "Work in progress",
+    "text": "Work in progress\nSkill mismatch and job satisfaction: evidence from OECD countries (with P. Beneito)\nFirst chapter of my PhD thesis · early stage\nHow does skill mismatch affect workers’ job satisfaction, and what does it mean for their well-being?\nRead the abstract"
+  },
+  {
+    "objectID": "index.html#software",
+    "href": "index.html#software",
+    "title": "Alejandro Lucas",
+    "section": "Software",
+    "text": "Software\nStata · R · Python · MATLAB · LaTeX · Git"
+  }
+]

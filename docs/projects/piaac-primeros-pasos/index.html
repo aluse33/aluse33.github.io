@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-09-08">
+<meta name="description" content="How to compute means and regressions with plausible values and replicate weights in the OECD Survey of Adult Skills, in Stata, R and Python.">
+
+<title>Alejandro Lucas - PIAAC: getting started with plausible values</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../files/favicon.svg" rel="icon" type="image/svg+xml">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Alejandro Lucas</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../research.html" rel="" target="">
+ <span class="menu-text">Research</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../projects.html" rel="" target="">
+ <span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../teaching.html" rel="" target="">
+ <span class="menu-text">Teaching</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../media.html" rel="" target="">
+ <span class="menu-text">Talks</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../files/CV.pdf" rel="" target="">
+ <span class="menu-text">CV</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">PIAAC: getting started with plausible values</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">PIAAC</div>
+    <div class="quarto-category">Stata</div>
+    <div class="quarto-category">R</div>
+    <div class="quarto-category">Python</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    How to compute means and regressions with plausible values and replicate weights in the OECD Survey of Adult Skills, in Stata, R and Python.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 8, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<p>The OECD Survey of Adult Skills (PIAAC) is one of the richest sources of data on adults’ literacy, numeracy and problem-solving skills. Its design, however, has two features that make it different from a standard household survey, and both matter for getting estimates and standard errors right.</p>
+<section id="two-things-to-keep-in-mind" class="level2">
+<h2 class="anchored" data-anchor-id="two-things-to-keep-in-mind">Two things to keep in mind</h2>
+<p><strong>1. There is no single test score.</strong> Each respondent only answers part of the assessment, so PIAAC does not report one score per person. Instead, it provides <strong>10 plausible values</strong> for each domain (<code>PVLIT1–PVLIT10</code>, <code>PVNUM1–PVNUM10</code>, …): random draws from the distribution of that person’s likely proficiency. Any statistic must be computed once with each plausible value and then combined using <strong>Rubin’s rules</strong>:</p>
+<p><span class="math display">\[
+\hat\theta = \frac{1}{M}\sum_{m=1}^{M}\hat\theta_m, \qquad
+V = \bar U + \left(1 + \frac{1}{M}\right) B,
+\]</span></p>
+<p>where <span class="math inline">\(\bar U\)</span> is the average sampling variance across plausible values and <span class="math inline">\(B\)</span> is the variance of the <span class="math inline">\(M = 10\)</span> estimates between them. Averaging the plausible values into a single score and running one regression gives the wrong standard errors.</p>
+<p><strong>2. Standard errors come from replicate weights.</strong> Besides the final weight <code>SPFWT0</code>, every file includes <strong>80 replicate weights</strong> (<code>SPFWT1–SPFWT80</code>). The sampling variance is obtained by re-estimating with each replicate weight. The variance formula depends on the country’s jackknife method, stored in <code>VEMETHODN</code>: for <strong>JK2</strong> the squared deviations are simply summed, while for <strong>JK1</strong> they are multiplied by <span class="math inline">\((R-1)/R\)</span>, with <span class="math inline">\(R = 80\)</span>.</p>
+</section>
+<section id="stata" class="level2">
+<h2 class="anchored" data-anchor-id="stata">Stata</h2>
+<p>The <code>repest</code> command (Avvisati and Keslair, 2014) handles both features automatically: the <code>@</code> symbol tells it where the plausible-value number goes.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode stata code-with-copy"><code class="sourceCode stata"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>* <span class="kw">ssc</span> install repest</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="st">"prgespp1.dta"</span>, <span class="kw">clear</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">rename</span> *, <span class="fu">lower</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>* Mean numeracy <span class="kw">score</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>repest PIAAC, estimate(<span class="kw">means</span> pvnum@)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>* Regression <span class="kw">of</span> numeracy <span class="kw">on</span> gender and age</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>repest PIAAC, estimate(stata: <span class="kw">reg</span> pvnum@ i.gender_r age_r)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="r" class="level2">
+<h2 class="anchored" data-anchor-id="r">R</h2>
+<p>The <code>intsvy</code> package (Caro and Biecek, 2017) offers equivalent functions for PIAAC.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(intsvy)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>piaac <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="st">"prgespp1.dta"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(piaac) <span class="ot">&lt;-</span> <span class="fu">toupper</span>(<span class="fu">names</span>(piaac))   <span class="co"># intsvy expects upper-case names</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Mean numeracy score</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">piaac.mean.pv</span>(<span class="at">pvlabel =</span> <span class="st">"NUM"</span>, <span class="at">data =</span> piaac)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Regression of numeracy on gender and age</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">piaac.reg.pv</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="st">"GENDER_R"</span>, <span class="st">"AGE_R"</span>), <span class="at">pvlabel =</span> <span class="st">"NUM"</span>, <span class="at">data =</span> piaac)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="python" class="level2">
+<h2 class="anchored" data-anchor-id="python">Python</h2>
+<p>There is no standard package for this in Python, but the procedure is short enough to write by hand. The function below estimates a weighted regression for each plausible value and each replicate weight, and combines the results with Rubin’s rules.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> piaac_reg(df, rhs, domain<span class="op">=</span><span class="st">"NUM"</span>, n_pv<span class="op">=</span><span class="dv">10</span>, n_rep<span class="op">=</span><span class="dv">80</span>):</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Weighted OLS with plausible values and replicate weights."""</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    jk1 <span class="op">=</span> <span class="bu">str</span>(df[<span class="st">"VEMETHODN"</span>].iloc[<span class="dv">0</span>]).upper() <span class="kw">in</span> (<span class="st">"1"</span>, <span class="st">"JK1"</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    factor <span class="op">=</span> (n_rep <span class="op">-</span> <span class="dv">1</span>) <span class="op">/</span> n_rep <span class="cf">if</span> jk1 <span class="cf">else</span> <span class="fl">1.0</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    coefs, samp_vars <span class="op">=</span> [], []</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> m <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, n_pv <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        formula <span class="op">=</span> <span class="ss">f"PV</span><span class="sc">{</span>domain<span class="sc">}{</span>m<span class="sc">}</span><span class="ss"> ~ </span><span class="sc">{</span>rhs<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        b0 <span class="op">=</span> smf.wls(formula, data<span class="op">=</span>df, weights<span class="op">=</span>df[<span class="st">"SPFWT0"</span>]).fit().params</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        reps <span class="op">=</span> pd.concat(</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>            [smf.wls(formula, data<span class="op">=</span>df, weights<span class="op">=</span>df[<span class="ss">f"SPFWT</span><span class="sc">{</span>r<span class="sc">}</span><span class="ss">"</span>]).fit().params</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>             <span class="cf">for</span> r <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, n_rep <span class="op">+</span> <span class="dv">1</span>)], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        coefs.append(b0)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        samp_vars.append(factor <span class="op">*</span> ((reps.sub(b0, axis<span class="op">=</span><span class="dv">0</span>)) <span class="op">**</span> <span class="dv">2</span>).<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>))</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    coefs <span class="op">=</span> pd.concat(coefs, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    est <span class="op">=</span> coefs.mean(axis<span class="op">=</span><span class="dv">1</span>)                          <span class="co"># Rubin: point estimate</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    U <span class="op">=</span> pd.concat(samp_vars, axis<span class="op">=</span><span class="dv">1</span>).mean(axis<span class="op">=</span><span class="dv">1</span>)     <span class="co"># within variance</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    B <span class="op">=</span> coefs.var(axis<span class="op">=</span><span class="dv">1</span>, ddof<span class="op">=</span><span class="dv">1</span>)                     <span class="co"># between variance</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    se <span class="op">=</span> np.sqrt(U <span class="op">+</span> (<span class="dv">1</span> <span class="op">+</span> <span class="dv">1</span> <span class="op">/</span> n_pv) <span class="op">*</span> B)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pd.DataFrame({<span class="st">"coef"</span>: est, <span class="st">"se"</span>: se})</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_stata(<span class="st">"prgespp1.dta"</span>, convert_categoricals<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>df.columns <span class="op">=</span> df.columns.<span class="bu">str</span>.upper()</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.dropna(subset<span class="op">=</span>[<span class="st">"GENDER_R"</span>, <span class="st">"AGE_R"</span>])</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>piaac_reg(df, <span class="st">"C(GENDER_R) + AGE_R"</span>, domain<span class="op">=</span><span class="st">"NUM"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Before you start
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Country files can be downloaded from the <a href="https://www.oecd.org/en/about/programmes/piaac/piaac-data.html">OECD PIAAC data page</a>. File and variable names may differ slightly between countries and survey cycles, so check the codebook for the file you are using.</p>
+</div>
+</div>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>Avvisati, F. and Keslair, F. (2014). REPEST: Stata module to run estimations with weighted replicate samples and plausible values. <em>Statistical Software Components</em>, Boston College.</li>
+<li>Caro, D. H. and Biecek, P. (2017). intsvy: An R package for analyzing international large-scale assessment data. <em>Journal of Statistical Software</em>, 81(7), 1–44.</li>
+<li>OECD (2019). <em>Technical Report of the Survey of Adult Skills (PIAAC)</em>, 3rd edition. OECD Publishing, Paris.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<!-- Ecuaciones que flotan por el fondo de la página.
+     Para quitarlas: borra la línea "include-after-body: equations.html" de _quarto.yml.
+     Para añadir o cambiar ecuaciones: edita la lista EQS de abajo (se admite <sub> y <sup>). -->
+<div class="eq-float" aria-hidden="true"></div>
+<script>
+(function () {
+  var EQS = [
+    "b = (X′X)<sup>−1</sup>X′y",
+    "τ<sub>ATT</sub> = E[Y(1) − Y(0) | D = 1]",
+    "E[ε | X] = 0",
+    "LATE = Cov(Y,Z) / Cov(D,Z)",
+    "y<sub>t</sub> = φ y<sub>t−1</sub> + ε<sub>t</sub>",
+    "Pr(Y = 1 | x) = Φ(x′β)",
+    "Y<sub>i</sub> = D<sub>i</sub>Y<sub>i</sub>(1) + (1 − D<sub>i</sub>)Y<sub>i</sub>(0)",
+    "y<sub>it</sub> = α<sub>i</sub> + λ<sub>t</sub> + δD<sub>it</sub> + ε<sub>it</sub>",
+    "√n (b − β) → N(0, V)",
+    "Var(X) = E[X²] − (E[X])²",
+    "Cov(X,Y) = E[XY] − E[X]E[Y]",
+    "P(A | B) = P(B | A) P(A) / P(B)",
+    "f(x) = e<sup>−(x−μ)²/2σ²</sup> / √(2πσ²)",
+    "ℓ(θ) = Σ<sub>i</sub> log f(y<sub>i</sub> ; θ)",
+    "R² = 1 − SSR / SST",
+    "t = (b − β<sub>0</sub>) / se(b)",
+    "min<sub>β</sub> Σ<sub>i</sub> (y<sub>i</sub> − x<sub>i</sub>′β)²",
+    "ρ = σ<sub>xy</sub> / σ<sub>x</sub>σ<sub>y</sub>",
+    "Δy<sub>t</sub> = μ + γ Δy<sub>t−1</sub> + u<sub>t</sub>",
+    "E[Y | X = x] = x′β",
+    "plim (1/n) Σ x<sub>i</sub> = μ",
+    "θ<sub>PV</sub> = (1/M) Σ<sub>m</sub> θ<sub>m</sub>"
+  ];
+
+  var box = document.querySelector(".eq-float");
+  if (!box) return;
+  document.body.prepend(box);   // directamente en <body>, por detrás de todo el contenido
+  var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var n = window.innerWidth < 768 ? 10 : EQS.length;
+  var W, H, items = [];
+
+  function size() { W = window.innerWidth; H = window.innerHeight; }
+  size();
+  window.addEventListener("resize", size);
+
+  for (var i = 0; i < n; i++) {
+    var el = document.createElement("span");
+    el.innerHTML = EQS[i];
+    box.appendChild(el);
+    var ang = Math.random() * 2 * Math.PI, speed = 6 + Math.random() * 10; // píxeles por segundo
+    items.push({ el: el, x: Math.random() * W, y: Math.random() * H,
+                 vx: Math.cos(ang) * speed, vy: Math.sin(ang) * speed, w: 0, h: 0 });
+  }
+  items.forEach(function (it) { it.w = it.el.offsetWidth; it.h = it.el.offsetHeight; });
+
+  function place(it) { it.el.style.transform = "translate(" + it.x + "px," + it.y + "px)"; }
+  items.forEach(place);
+  if (still) return;
+
+  var last = performance.now();
+  function tick(now) {
+    var dt = Math.min((now - last) / 1000, 0.1); last = now;
+    items.forEach(function (it) {
+      it.x += it.vx * dt; it.y += it.vy * dt;
+      // al salir por un borde, reaparece por el contrario
+      if (it.x > W) it.x = -it.w; else if (it.x < -it.w) it.x = W;
+      if (it.y > H) it.y = -it.h; else if (it.y < -it.h) it.y = H;
+      place(it);
+    });
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">© 2026 Alejandro Lucas</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="https://www.uv.es"><i class="bi bi-bank"></i>&nbsp; University of Valencia</a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+<script src="../../site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

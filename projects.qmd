@@ -1,0 +1,11 @@
+---
+title: "Projects"
+subtitle: "Notes, code and tutorials on applied econometrics and data."
+listing:
+  contents: projects
+  type: grid
+  sort: "date desc"
+  categories: false
+  fields: [title, description, date, categories]
+  grid-columns: 2
+---
