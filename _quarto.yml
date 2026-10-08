@@ -3,6 +3,7 @@ project:
   output-dir: docs          # GitHub Pages puede servir directamente esta carpeta
   resources:
     - files/
+    - googlee4af241c9133d214.html   # verificación de Google Search Console
 
 website:
   title: "Alejandro Lucas"
