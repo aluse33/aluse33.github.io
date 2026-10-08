@@ -13,6 +13,9 @@ about:
     - icon: github
       text: GitHub
       href: https://github.com/aluse33
+    - icon: person-vcard
+      text: ORCID
+      href: https://orcid.org/0009-0009-2431-8447
     - icon: bank
       text: UV profile
       href: "https://www.uv.es/uvweb/universidad/es/ficha-persona-1285950309813.html?p2=lusea@uv.es&idA="
