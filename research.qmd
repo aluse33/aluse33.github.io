@@ -19,3 +19,8 @@ The dissatisfaction penalty from overskilling appears to be larger among low-edu
 workers. Overall, skill mismatch has meaningful consequences for worker well-being,
 with implications for education, training and labour market policy.
 :::
+
+::: {.slides-note}
+<i class="bi bi-envelope"></i> Slides are available upon request:
+[email me](mailto:alejandro.lucas@uv.es?subject=Slides%20request%3A%20Skill%20mismatch%20and%20labour%20market%20outcomes).
+:::

@@ -207,3 +207,14 @@ h3 { font-weight: 700; font-size: 1.2rem; margin-top: 1.5rem; }
   }
 }
 #quarto-content, .nav-footer { position: relative; z-index: 1; }
+
+// ---------- Nota "slides disponibles" bajo el abstract ----------
+.slides-note {
+  font-size: .95rem;
+  color: $muted;
+  margin-top: -1.2rem;
+  margin-bottom: 2rem;
+  p { margin: 0; }
+  .bi { color: $teal; margin-right: .3rem; }
+  a { font-weight: 600; }
+}
