@@ -26,7 +26,7 @@ about:
 
 I am a **first-year PhD candidate** in Industrial Economics at the **University of Valencia**.
 My research focuses on **applied microeconometrics** and lies at the intersection of
-**labour economics** and the **economics of education**, with special attention to
+**labor economics** and the **economics of education**, with special attention to
 **skill mismatch**. I am also interested in **causal inference** and in how
 **machine learning** tools can support empirical work in economics.
 
@@ -34,7 +34,7 @@ My research focuses on **applied microeconometrics** and lies at the intersectio
 
 - Causal inference
 - Applied microeconometrics
-- Labour economics
+- Labor economics
 - Economics of education
 - Skill mismatch
 - Machine learning
@@ -50,7 +50,7 @@ Supervisors: Pilar Beneito & Óscar Vicente-Chirivella
 
 ## Work in progress
 
-**Skill mismatch and labour market outcomes: a welfare perspective** (with P. Beneito)\
+**Skill mismatch and labor market outcomes: a welfare perspective** (with P. Beneito)\
 *First chapter of my PhD thesis · in progress*\
 How does skill mismatch affect workers' job satisfaction, and what does it mean
 for their well-being?\

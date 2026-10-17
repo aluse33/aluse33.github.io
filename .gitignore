@@ -9,3 +9,4 @@ data/
 
 # Archivos privados (slides, borradores): no se suben a GitHub
 _private/
+.Rproj.user
