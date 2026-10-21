@@ -40,6 +40,7 @@ format:
     code-copy: true
     code-tools: false
     include-after-body: equations.html
+    include-in-header: analytics.html   # contador de visitas (GoatCounter)
 
 # Los proyectos con código se ejecutan una vez y se "congelan":
 # así no hace falta tener R/Python/Stata instalados para reconstruir la web.
