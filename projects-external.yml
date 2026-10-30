@@ -1,0 +1,7 @@
+# Projects hosted outside this site: they appear in the Projects listing
+# and the card links directly to the external URL.
+- title: "Minuto 90: Real Madrid analytics"
+  path: https://aluse33.github.io/madrid-analytics/en/
+  description: "Data analysis of Real Madrid in LaLiga: expected goals (xG), prediction models, Monte Carlo simulation and Bayesian statistics. Updated after every matchday."
+  date: 2026-10-30
+  categories: [Football, xG, Bayesian, Forecasting]

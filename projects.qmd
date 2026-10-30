@@ -2,7 +2,9 @@
 title: "Projects"
 subtitle: "Notes, code and tutorials on applied econometrics and data."
 listing:
-  contents: projects
+  contents:
+    - projects
+    - projects-external.yml
   type: grid
   sort: "date desc"
   categories: false
